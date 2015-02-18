@@ -37,7 +37,7 @@ void loop() {
   sleep();
   if(pinPIR == HIGH){
     digitalWrite(pinOPTO, HIGH);
-    delay(tiempoEncendido*1000);
+  }else{
     digitalWrite(pinOPTO, LOW);
   }
 }

@@ -35,10 +35,12 @@ ISR(PCINT0_vect) {
 
 void loop() {
   sleep();
-  if(pinPIR == HIGH){
+  if(digitalRead(pinPIR) == HIGH){
     digitalWrite(pinOPTO, HIGH);
+    //delay(2000);
   }else{
     digitalWrite(pinOPTO, LOW);
+    //delay(2000);
   }
 }
 

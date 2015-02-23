@@ -1,8 +1,8 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 
-const int pinPIR  = 3;
-const int pinOPTO = 2;
+const int pinPIR  = 4;
+const int pinOPTO = 0;
 const int tiempoEncendido = 8;
 void setup() {
 
@@ -13,7 +13,7 @@ void setup() {
 void sleep() {
 
   GIMSK |= _BV(PCIE);                     // Enable Pin Change Interrupts
-  PCMSK |= _BV(PCINT3);                   // Use PB3 as interrupt pin
+  PCMSK |= _BV(PCINT4);                   // Use PB3 as interrupt pin
   ADCSRA &= ~_BV(ADEN);                   // ADC off
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);    // replaces above statement
 
@@ -22,7 +22,7 @@ void sleep() {
   sleep_cpu();                            // sleep
 
   cli();                                  // Disable interrupts
-  PCMSK &= ~_BV(PCINT3);                  // Turn off PB3 as interrupt pin
+  PCMSK &= ~_BV(PCINT4);                  // Turn off PB3 as interrupt pin
   sleep_disable();                        // Clear SE bit
   ADCSRA |= _BV(ADEN);                    // ADC on
 

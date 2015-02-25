@@ -1,13 +1,15 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
+#include <WProgram.h>
+#include <Arduino.h>
 
-const int pinPIR  = 4;
-const int pinOPTO = 0;
-const int tiempoEncendido = 8;
+const int pinPIR  = 4;                   // Pin PB4 (pin 3) for PIR sensor
+const int pinOPTO = 0;                   // Pin PB0 (pin 5) for optocoupler
+const int tiempoEncendido = 8;           
 void setup() {
 
-  pinMode(pinPIR, INPUT);
-  pinMode(pinOPTO, OUTPUT);
+  pinMode(pinPIR, INPUT);                // Sets PIR pin as input
+  pinMode(pinOPTO, OUTPUT);              // Sets optocoupler pin as output
 } // setup
 
 void sleep() {
@@ -34,13 +36,14 @@ ISR(PCINT0_vect) {
 }
 
 void loop() {
-  sleep();
-  if(digitalRead(pinPIR) == HIGH){
-    digitalWrite(pinOPTO, HIGH);
+  
+  sleep();   // Sets the ATTINY85 in sleep mode
+  
+  if(digitalRead(pinPIR) == HIGH){         // Check if PIR has been triggered
+    digitalWrite(pinOPTO, HIGH);           // Turn light on
     //delay(2000);
-  }else{
-    digitalWrite(pinOPTO, LOW);
+  }else{                                   // If PIR hasn't been triggered
+    digitalWrite(pinOPTO, LOW);            // Turn light off
     //delay(2000);
   }
 }
-

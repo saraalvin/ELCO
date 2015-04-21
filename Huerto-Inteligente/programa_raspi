@@ -1,0 +1,51 @@
+from nrf24 import NRF24
+import time
+
+pipes = [[0x65, 0x64, 0x6f, 0x4e, 0x32], [0x65, 0x64, 0x6f, 0x4e, 0x31]]
+radio = NRF24()
+radio.begin(0, 0, 25, 18) #Set CE and IRQ pins
+radio.setRetries(15,15)
+radio.setPayloadSize(32)
+radio.setChannel(0x4c)
+radio.setPALevel(NRF24.PA_MAX)
+radio.openReadingPipe(1, pipes[1])
+radio.openWritingPipe(pipes[0])
+radio.startListening()
+radio.printDetails()
+radio.powerUp()
+cont=0
+
+mi_direccion = "RP"
+direcciones_huerto = ("H1",)
+
+
+for direccion_huerto in direcciones_huerto:
+  pipe = [0]
+  
+  comando = mi_direccion + ";" + direccion_huerto + ";damedatos"
+  radio.stopListening()
+  radio.write(comando)
+  radio.startListening()
+  while not radio.available(pipe):
+    time.sleep(0.250)
+  recv_buffer = []
+  radio.read(recv_buffer)
+  out = ''.join(chr(i) for i in recv_buffer)
+  print out
+  out = out.split(";")
+  direccion = out[1]
+  if direccion == mi_direccion:
+        luz = out[2]
+        humedad_ambiente = out[3]
+        humedad_tierra = out[4]
+        temperatura = out[5]
+        print temperatura
+        print humedad_ambiente
+        print humedad_tierra
+        print luz
+  fichero = open(direccion_huerto, 'w')
+  fichero.write(temperatura)
+  fichero.write(humedad_ambiente)
+  fichero.write(humedad_tierra)
+  fichero.write(luz)
+  fichero.close()
